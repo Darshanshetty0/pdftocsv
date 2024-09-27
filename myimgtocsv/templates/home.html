@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'myimgtocsv/styles.css' %}">
 </head>
 <body>
-    <h1>{{ title }}</h1>
-    <p>{{ content }}</p>
+  <div class="container">
+    <div class="top-row">
+      <div class="dropdown">
+        <label for="column-select">Choose Column</label>
+        <select id="column-select">
+          <option value="default">Default</option>
+          <!-- Add more options as needed -->
+        </select>
+      </div>
+      <button class="default-btn">Default</button>
+    </div>
+
+    <div class="content-row">
+      <div class="crop-image">Crop Image</div>
+      <div class="input-box">
+        <textarea placeholder="Input box with a string variable filled in"></textarea>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <button class="share-btn">Share</button>
+      <button class="select-btn">Make Selection</button>
+      <button class="next-btn">Next</button>
+      <button class="process-btn">Process</button>
+    </div>
+  </div>
 </body>
 </html>
