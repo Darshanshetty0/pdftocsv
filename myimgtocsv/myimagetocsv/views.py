@@ -18,11 +18,12 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
-uploaded_files = []
+variables = {}
 
 def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
+        
         if form.is_valid():
             # Get the uploaded file
             file = request.FILES['file']
@@ -32,9 +33,10 @@ def upload_file(request):
             
             # Get the first row (header or first data row)
             first_row = next(reader)  # This will return the first row as a list
+            variables["column_names"] = first_row
             
-            # Return the first row as an HTTP response
-            return HttpResponse(f"First row of CSV: {first_row}")
+            # Return the first row in home.html
+            return render(request, 'home.html', {'columns': variables["column_names"]})
     else:
         form = UploadFileForm()
 

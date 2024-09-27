@@ -13,8 +13,9 @@
       <div class="dropdown">
         <label for="column-select">Choose Column</label>
         <select id="column-select">
-          <option value="default">Default</option>
-          <!-- Add more options as needed -->
+          {% for column in columns %}
+            <option value="{{ column }}">{{ column }}</option>
+          {% endfor %}
         </select>
       </div>
       <button class="default-btn">Default</button>
