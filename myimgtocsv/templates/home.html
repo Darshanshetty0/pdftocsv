@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
   {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'myimgtocsv/styles.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'myimgtocsv/styles.css' %}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="container">
@@ -18,22 +19,71 @@
           {% endfor %}
         </select>
       </div>
-      <button class="default-btn">Default</button>
+      <button class="default-btn">Next</button>
     </div>
 
     <div class="content-row">
-      <div class="crop-image">Crop Image</div>
+      <div class="crop-image">
+        <img id="image-preview" alt="Image preview">
+      </div>
       <div class="input-box">
         <textarea placeholder="Input box with a string variable filled in"></textarea>
       </div>
     </div>
 
     <div class="bottom-row">
-      <button class="share-btn">Share</button>
-      <button class="select-btn">Make Selection</button>
-      <button class="next-btn">Next</button>
+      <input class="share-btn" type="file" id="image-upload" accept="image/*">
+      <button id="crop-btn" style="display:none;" class="select-btn">Select Cropped Area</button>
       <button class="process-btn">Process</button>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  <script>
+    let cropper;
+    const imageUpload = document.getElementById('image-upload');
+    const imagePreview = document.getElementById('image-preview');
+    const cropButton = document.getElementById('crop-btn');
+    const croppedCanvas = document.getElementById('cropped-canvas');
+
+    // Image Upload Event
+    imageUpload.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          imagePreview.src = reader.result;
+          cropButton.style.display = 'block';
+
+          // Initialize cropper after image is loaded
+          if (cropper) {
+            cropper.destroy(); // destroy previous instance
+          }
+          cropper = new Cropper(imagePreview, {
+            aspectRatio: 1, // Change this based on desired aspect ratio
+            viewMode: 2
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Crop Image and Display on Canvas
+    cropButton.addEventListener('click', () => {
+      const croppedData = cropper.getCroppedCanvas(); // Get cropped canvas
+
+      croppedCanvas.style.display = 'block';
+      croppedCanvas.width = croppedData.width;
+      croppedCanvas.height = croppedData.height;
+      const ctx = croppedCanvas.getContext('2d');
+      ctx.drawImage(croppedData, 0, 0);
+
+      // Optional: Save the image
+      const croppedImageDataURL = croppedData.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = croppedImageDataURL;
+      a.download = 'cropped-image.png';
+      a.click(); // Simulate a click to download the image
+    });
+  </script>
 </body>
 </html>

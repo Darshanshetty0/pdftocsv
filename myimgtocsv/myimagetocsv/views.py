@@ -4,7 +4,7 @@ from PIL import Image
 import pytesseract
 
 import csv
-from .forms import UploadFileForm
+from .forms import UploadFileForm, ImageUploadForm
 
 
 def index(request):
@@ -41,3 +41,7 @@ def upload_file(request):
         form = UploadFileForm()
 
     return render(request, 'upload.html', {'form': form})
+
+def detect(request):
+    
+    return render(request, 'upload.html', {'columns': variables["column_names"]})
